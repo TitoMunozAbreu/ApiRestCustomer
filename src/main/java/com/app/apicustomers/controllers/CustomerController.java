@@ -1,6 +1,7 @@
 package com.app.apicustomers.controllers;
 
 import com.app.apicustomers.domain.Customer;
+import com.app.apicustomers.domain.resquest.CustomerRequest;
 import com.app.apicustomers.services.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,13 +42,13 @@ public class CustomerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Customer created",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Customer.class))}),
+                            schema = @Schema(implementation = CustomerRequest.class))}),
             @ApiResponse(responseCode = "400", description = "Customer not created",
                     content = @Content)})
     @PostMapping
-    public ResponseEntity<?> createCustomer(@RequestBody  Customer newCustomer){
+    public ResponseEntity<Customer> createCustomer(@RequestBody CustomerRequest customerRequest){
 
-        return this.customerService.createCustomer(newCustomer);
+        return customerService.createCustomer(customerRequest);
     }
 
     @DeleteMapping("/{id}")

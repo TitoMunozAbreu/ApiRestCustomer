@@ -1,6 +1,7 @@
 package com.app.apicustomers.services;
 
 import com.app.apicustomers.domain.Customer;
+import com.app.apicustomers.domain.resquest.CustomerRequest;
 import com.app.apicustomers.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -42,13 +46,25 @@ public class CustomerService {
     }
 
     @Transactional
-    public ResponseEntity<?> createCustomer(Customer newCustomer) {
+    public ResponseEntity<Customer> createCustomer(CustomerRequest customerRequest) {
 
-        this.customerRepository.save(newCustomer);
+        //definir el formato de fecha
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        //alamcenar la fecha formateada
+        LocalDate dateTime = LocalDate.parse(customerRequest.getDob(),formatter);
+
+        Customer newCustomer = Customer.builder()
+                .firstName(customerRequest.getFirstName())
+                .lastName(customerRequest.getLastName())
+                .email(customerRequest.getEmail())
+                .dob(dateTime)
+                .build();
+
+        Customer save = customerRepository.save(newCustomer);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body("{\"mensaje\":\" " + "Customer: " + newCustomer.getFirstName() + " " + newCustomer.getLastName() + " creado con exito.\"}");
+                .body(save);
     }
 
     @Transactional

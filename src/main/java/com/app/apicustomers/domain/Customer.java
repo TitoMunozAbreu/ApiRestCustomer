@@ -1,5 +1,6 @@
 package com.app.apicustomers.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,7 +39,8 @@ public class Customer implements Serializable {
     private String email;
 
     @Column(columnDefinition = "DATE")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "ddMMyyy")
     private LocalDate dob;
 
 }
